@@ -1,0 +1,32 @@
+services:
+  openvpn:
+    environment:
+      # The public URL/IP of your OpenVPN server
+      - OVPN_SERVER_URL=vpn.example.com
+      
+      # Protocol (udp or tcp)
+      - OVPN_PROTO=udp
+      
+      # Port
+      - OVPN_PORT=1194
+      
+      # VPN network
+      - OVPN_NETWORK=10.8.0.0
+      - OVPN_NETMASK=255.255.255.0
+      
+      # DNS servers for VPN clients
+      - OVPN_DNS_SERVERS=8.8.8.8 8.8.4.4
+      
+      # Network device for NAT (usually eth0)
+      - OVPN_NAT_DEVICE=eth0
+      
+      # Easy-RSA PKI configuration
+      - EASYRSA_REQ_COUNTRY=US
+      - EASYRSA_REQ_PROVINCE=California
+      - EASYRSA_REQ_CITY=San Francisco
+      - EASYRSA_REQ_ORG=OpenVPN
+      - EASYRSA_REQ_EMAIL=admin@example.com
+      - EASYRSA_REQ_OU=IT
+      - EASYRSA_KEY_SIZE=2048
+      - EASYRSA_CA_EXPIRE=3650
+      - EASYRSA_CERT_EXPIRE=3650

@@ -1,0 +1,58 @@
+volumes:
+  openvpn-server:
+  openvpn-client:
+
+services:
+  openvpn-server:
+    image: ghcr.io/rclsilver-org/docker-openvpn-server:local
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    ports:
+      - "1194:1194/udp"
+    volumes:
+      - openvpn-server:/etc/openvpn
+    environment:
+      - OVPN_SERVER_URL=${OVPN_SERVER_URL}
+      - OVPN_PROTO=${OVPN_PROTO:-udp}
+      - OVPN_PORT=${OVPN_PORT:-1194}
+      - OVPN_NETWORK=${OVPN_NETWORK:-10.8.0.0}
+      - OVPN_NETMASK=${OVPN_NETMASK:-255.255.255.0}
+      - OVPN_DNS_SERVERS=${OVPN_DNS_SERVERS:-8.8.8.8 8.8.4.4}
+      - OVPN_NAT_DEVICE=${OVPN_NAT_DEVICE:-eth0}
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+
+  openvpn-client:
+    image: ghcr.io/rclsilver-org/docker-openvpn-client:local
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    volumes:
+      - openvpn-client:/etc/openvpn/client
+    # Décommenter et configurer selon vos besoins
+    # environment:
+    #   - OPENVPN_CONFIG=client.conf
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+    # Démarrage manuel par défaut, décommenter pour démarrer automatiquement
+    profiles:
+      - client

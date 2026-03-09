@@ -1,0 +1,55 @@
+port ${OVPN_PORT}
+proto ${OVPN_PROTO}
+dev tun
+
+ca /etc/openvpn/pki/ca.crt
+cert /etc/openvpn/pki/issued/server.crt
+key /etc/openvpn/pki/private/server.key
+dh /etc/openvpn/pki/dh.pem
+tls-auth /etc/openvpn/pki/ta.key 0
+
+server ${OVPN_NETWORK} ${OVPN_NETMASK}
+ifconfig-pool-persist /etc/openvpn/ipp.txt
+
+# Maintain a record of client <-> virtual IP address
+# associations in this file
+ifconfig-pool-persist /var/log/openvpn/ipp.txt
+
+# Push routes to the client
+push "redirect-gateway def1 bypass-dhcp"
+
+# DNS servers
+push "dhcp-option DNS ${OVPN_DNS_SERVERS}"
+
+# Client configuration directory
+client-config-dir /etc/openvpn/ccd
+
+keepalive 10 120
+
+# Cryptographic cipher
+cipher AES-256-GCM
+auth SHA256
+
+# Enable compression on the VPN link
+compress lz4-v2
+push "compress lz4-v2"
+
+# Maximum number of clients
+max-clients 100
+
+# Run OpenVPN as unprivileged user
+user nobody
+group nobody
+
+# Persist certain options
+persist-key
+persist-tun
+
+# Output a short status file
+status /var/log/openvpn/openvpn-status.log
+
+# Logging
+verb 3
+
+# Notify clients when server restarts
+explicit-exit-notify 1

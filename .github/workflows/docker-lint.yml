@@ -1,0 +1,29 @@
+name: Lint Dockerfiles
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  hadolint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dockerfile:
+          - server/Dockerfile
+          - client/Dockerfile
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Hadolint on ${{ matrix.dockerfile }}
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: ${{ matrix.dockerfile }}
+          failure-threshold: warning

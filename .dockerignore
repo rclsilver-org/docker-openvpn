@@ -1,0 +1,28 @@
+# Git
+.git
+.gitignore
+.github
+
+# Docker
+docker-compose.yaml
+docker-compose.override.yaml
+docker-compose.override.yaml.example
+.dockerignore
+
+# Documentation
+README.md
+LICENSE
+
+# Editor
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Client configs
+*.ovpn

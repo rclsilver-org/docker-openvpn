@@ -1,0 +1,4 @@
+ignored:
+  - DL3018  # Pin versions in apk add (not critical for this use case)
+  - DL3013  # Pin versions in pip (not applicable here)
+  - DL3008  # Pin versions in apt-get install (not critical for this use case)
